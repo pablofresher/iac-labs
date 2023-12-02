@@ -13,15 +13,14 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  job1:
 
     runs-on: ubuntu-latest
 
     defaults:
       run: 
         working-directory: ./example-app
-
+        
 
     steps:
     - uses: actions/checkout@v3
@@ -32,16 +31,26 @@ jobs:
         
     - name: Install Poetry Action
       uses: snok/install-poetry@v1.3.4
+
+    - name: Cache build venv
+      id: cached-poetry-dependencies
+      uses: actions/cache@v3
+      with:
+        path: /home/runner/.cache/pypoetry/virtualenvs
+        key: ${{ runner.os }}-venv
             
     - name: Install
       run: poetry install --no-root
 
-    - name: poetry run task test
+    - name: test
       run: poetry run task test
       
-    - name: poetry run task lint
+    - name: lint
       run: poetry run task lint
 
-    - name: poetry run task formatter
+    - name: formatter
       run: poetry run task formatter
+
+    - name: security
+      run: poetry run task security
       
